@@ -12,16 +12,6 @@
 #pragma config FPLLMUL =	MUL_20
 #pragma config FPLLODIV =	DIV_1
 
-#define ENABLE() {PORTDbits.RD4=1;\
-                  PORTDbits.RD4=0;\
-                  busy();}
-
-#define CONTROL() {PORTBbits.RB15=0; /*RS=0*/\
-                  PORTDbits.RD5=0; /*RW=0*/}
-                   
-#define DATA() {PORTBbits.RB15=1; /*RS=0*/ \
-                PORTDbits.RD5=0; /*RW=0*/}
-
 #define FIRST_LINE_START 0x80
 #define FIRST_LINE_END 0x8f
 #define SECOND_LINE_START 0xc0
@@ -36,6 +26,15 @@
 #define SW6 PORTBbits.RB10
 #define SW7 PORTBbits.RB9
 
+#define ENABLE() {PORTDbits.RD4=1;\
+                  PORTDbits.RD4=0;\
+                  busy();}
+
+#define CONTROL() {PORTBbits.RB15=0; /*RS=0*/\
+                  PORTDbits.RD5=0; /*RW=0*/}
+                   
+#define DATA() {PORTBbits.RB15=1; /*RS=0*/ \
+                PORTDbits.RD5=0; /*RW=0*/}
 
 //Switches functions
 void count();
