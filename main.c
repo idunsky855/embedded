@@ -27,12 +27,23 @@
 #define SECOND_LINE_START 0xc0
 #define SECOND_LINE_END 0xcf
 
+#define SW0 PORTFbits.RF3
+#define SW1 PORTFbits.RF5
+#define SW2 PORTFbits.RF4
+#define SW3 PORTDbits.RD15
+#define SW4 PORTDbits.RD14
+#define SW5 PORTBbits.RB11
+#define SW6 PORTBbits.RB10
+#define SW7 PORTBbits.RB9
+
+
 //Switches functions
 void count();
 void shift();
 void fan();
 char* determineSpeed();
-void makeSound();
+void beep();
+void pause();
 
 //LCD functions
 void busy(void);
@@ -93,31 +104,31 @@ void main(){
         PORTA &= 0xff00; //Set all LEDs to 0
         
         //Counter - SW0
-        if(PORTFbits.RF3 && !PORTBbits.RB9) {
+        if(SW0 && !SW7) {
             count();
             clearScreen();
         }
 
         //Shift - SW1
-        if(PORTFbits.RF5 && !PORTBbits.RB9){
+        if(SW1 && !SW7){
             shift();
             clearScreen();
         }
 
         //Fan - SW2
-        if(PORTFbits.RF4 && !PORTBbits.RB9){
+        if(SW2 && !SW7){
             fan();
             clearScreen();
         }
         
         //Speaker - SW6
-        if(PORTBbits.RB10 && !PORTBbits.RB9){
-            makeSound();
+        if(SW6 && !SW7){
+            beep();
             clearScreen();
         }
         
         //Exit - SW7
-        if(PORTBbits.RB9){
+        if(SW7){
             PORTA &= 0xff00;
             return;
         }
@@ -129,17 +140,21 @@ void count(){
     char topMsg[] = "Mode 0: \0";
     printTopLine(topMsg,strlen(topMsg));
     
-    //while SW0 is on
-    while(PORTFbits.RF3 && !PORTBbits.RB9){
+    //while SW0 is on and SW7 is down
+    while(SW0 && !SW7){
        
         //check PAUSE switch - SW05
-        while(PORTBbits.RB11);
+        if(SW5 && !SW7){
+            pause();
+            clearScreen();
+            printTopLine(topMsg, strlen(topMsg));
+        }
        
         //check priority ( SW0 < SW1 < SW2)
-        if(PORTFbits.RF4){ 
+        if(SW2 && !SW7){ 
             fan();
             break;
-        }else if(PORTFbits.RF5){ 
+        }else if(SW1){ 
             shift();
             break;
         }
@@ -147,7 +162,7 @@ void count(){
        char botMsg[16] = "Counter \0";
         
         //check direction - SW03
-        if(PORTDbits.RD15){
+        if(SW3 && !SW7){
             PORTA--;
             strcat(botMsg,"Down \0");
         }else{
@@ -176,12 +191,12 @@ void shift(){
     PORTA &= 0xff00; //Set all LED's off 
     
     //while SW1 is on
-    while(PORTFbits.RF5 && !PORTBbits.RB9){
+    while(SW1 && !SW7){
         
         char botMsg[16] = "Shift \0";
             
         //check SW03 - direction
-        if(PORTDbits.RD15 && ((PORTA & 0x00ff) == 0x0000) ){
+        if(SW3 && ((PORTA & 0x00ff) == 0x0000) && !SW7 ){
             strcpy(direction,"Right \0");
             PORTA |= 0x80;
         }else if((PORTA & 0x00ff) == 0x0000){
@@ -192,13 +207,17 @@ void shift(){
         strcat(botMsg,direction); //concatenate direction str
         
         //check priority ( SW0 < SW1 < SW2)
-        if(PORTFbits.RF4){
+        if(SW2 && !SW7){
             fan();
             break;
         }
             
         //check PAUSE switch - SW05
-        while(PORTBbits.RB11);
+        if(SW5 && !SW7){
+            pause();
+            clearScreen();
+            printTopLine(topMsg, strlen(topMsg));
+        }
             
         //check SW04 - determine speed and concatenate string
         strcat(botMsg,determineSpeed());
@@ -212,15 +231,11 @@ void shift(){
         for(int j=0 ; j < speed ; j++);
            
         //check direction - SW03
-        if(PORTDbits.RD15){
+        if(SW3 && !SW7){
             PORTA = PORTA>>1;
         }else{
             PORTA = PORTA<<1;
         }
-     
-        //check SW07 - exit
-        if(PORTBbits.RB9) return;
-        //}
     }
 }
 
@@ -231,11 +246,11 @@ void fan(){
     printTopLine(topMsg,strlen(topMsg));
     
     //While SW2 is on
-    while(PORTFbits.RF4 && !PORTBbits.RB9){
+    while(SW2 && !SW7){
         int right, left;
         
         //check direction - SW03
-        if(PORTDbits.RD15){
+        if(SW3 && !SW7){
             right = 0x80;
             left = 0x01;
         }else{ 
@@ -244,13 +259,13 @@ void fan(){
         }
         PORTA &= 0xff00;
           
-        while((right>0 && !PORTDbits.RD15) || (PORTDbits.RD15 && right >= 0x10)){
+        while(((right>0 && !SW3) || (SW3 && right >= 0x10)) && !SW7){
             comb = left | right; //next state value
             PORTA = 0xff00 | comb; 
             char botMsg[16] = "Swing \0";
         
             //determine and concatenate direction string
-            if(PORTDbits.RD15){
+            if(SW3){
                 strcat(botMsg,"Down \0");
             }else{
                  strcat(botMsg,"Up \0");
@@ -265,10 +280,11 @@ void fan(){
             if( botPos == FIRST_LINE_END ) botPos = SECOND_LINE_END;
             
             //check PAUSE switch - SW05
-            while(PORTBbits.RB11 && !PORTBbits.RB9);
-            
-            //check SW07 - exit
-            if(PORTBbits.RB9) return;
+            if(SW5 && !SW7){
+                pause();
+                clearScreen();
+                printTopLine(topMsg, strlen(topMsg));
+            }
             
             //delay
             for(int j=0 ; j < speed ; j++);
@@ -280,7 +296,7 @@ void fan(){
 }
 
 char* determineSpeed(){
-    if(PORTDbits.RD14){ 
+    if(SW4){ 
         speed = 200000;
         soundSpeed = 150000;
         return "Fast \0";
@@ -291,15 +307,19 @@ char* determineSpeed(){
     }
 }
 
-void makeSound(){
+void beep(){
     int i=100,j=100;
     
     //while SW06 is on
-    while(PORTBbits.RB10 && !PORTBbits.RB9){
+    while(SW6 && !SW7){
         PORTBbits.RB14 ^=1;
  
         //check PAUSE - SW05
-        while(PORTBbits.RB11);
+        if(SW5 && !SW7) {
+            pause();
+            clearScreen();
+           // printTopLine(topMsg, strlen(topMsg));///////////////////////////////////////////////////////////////////////////////////////////
+        };
         
         for(;j<100+i; j++);
         i+=100;
@@ -316,6 +336,24 @@ void makeSound(){
         
     }
     
+}
+
+
+void pause(){
+    char topMsg[] = "Mode 5: \0";
+    char botMsg[] = "Halt \0";
+    int botPos = SECOND_LINE_END;
+    
+    printTopLine(topMsg, strlen(topMsg));
+    
+    while(SW5){
+        //print bottom line
+        printScreen(botMsg, strlen(botMsg), botPos);
+        botPos--;
+        if( botPos == FIRST_LINE_END ) botPos = SECOND_LINE_END;
+        
+        delay();
+    }
 }
 
 void busy(void){
