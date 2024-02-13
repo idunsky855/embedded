@@ -228,9 +228,8 @@ void fan(){
     int comb;
     int botPos = SECOND_LINE_END; //start on bottom line right
     char topMsg[] = "Mode 2: \0";
-    char direction[] = "DIRECTION \0";   
     printTopLine(topMsg,strlen(topMsg));
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     //While SW2 is on
     while(PORTFbits.RF4 && !PORTBbits.RB9){
         int right, left;
@@ -239,7 +238,7 @@ void fan(){
         if(PORTDbits.RD15){
             right = 0x80;
             left = 0x01;
-        }else{
+        }else{ 
             right = 0x08;
             left = 0x10;
         }
@@ -248,9 +247,22 @@ void fan(){
         while((right>0 && !PORTDbits.RD15) || (PORTDbits.RD15 && right >= 0x10)){
             comb = left | right; //next state value
             PORTA = 0xff00 | comb; 
+            char botMsg[16] = "Swing \0";
+        
+            //determine and concatenate direction string
+            if(PORTDbits.RD15){
+                strcat(botMsg,"Down \0");
+            }else{
+                 strcat(botMsg,"Up \0");
+            }
             
-            //check SW04
-           //determineSpeed();////////////////////////////////////////////////
+            //check SW04 - determine speed and concatenate pace string
+            strcat(botMsg,determineSpeed());
+            
+            //print bottom line
+            printScreen(botMsg, strlen(botMsg), botPos);
+            botPos--;
+            if( botPos == FIRST_LINE_END ) botPos = SECOND_LINE_END;
             
             //check PAUSE switch - SW05
             while(PORTBbits.RB11 && !PORTBbits.RB9);
