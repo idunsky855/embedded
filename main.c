@@ -33,7 +33,7 @@
 #define CONTROL() {PORTBbits.RB15=0; /*RS=0*/\
                   PORTDbits.RD5=0; /*RW=0*/}
                    
-#define DATA() {PORTBbits.RB15=1; /*RS=0*/ \
+#define DATA() {PORTBbits.RB15=1; /*RS=1*/ \
                 PORTDbits.RD5=0; /*RW=0*/}
 
 //Switches functions
