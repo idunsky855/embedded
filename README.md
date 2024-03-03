@@ -2,14 +2,15 @@
 
 pic32mx370F512L kit project
 
-Switch 00: Binary counter - LED
-Switch 01: Shift - LED
-Switch 02: Swing - LED
-Switch 03: Direction - up/down - right/left
-Switch 04: Speed - fast/slow
-Switch 05: Halt 
-Switch 06: Beep - speaker
-Switch 07: Exit 
+Switch 00: Binary counter - LED\n
+Switch 01: Shift - LED\n
+Switch 02: Swing - LED\n
+Switch 03: Direction - up/down - right/left\n
+Switch 04: Speed - fast/slow\n
+Switch 05: Halt \n
+Switch 06: Beep - speaker\n
+Switch 07: Exit \n
+\n
 
 Priority: Switch 02 > Switch 01 > Switch 00  
 
