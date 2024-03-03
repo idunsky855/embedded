@@ -1,8 +1,7 @@
-﻿# embedded-exp2
+﻿# Embedded-exp2
 
 pic32mx370F512L kit project
-
-
+</br>
 
 <p>Switch 00: Binary counter - LED</p>
 <p>Switch 01: Shift - LED</p>
