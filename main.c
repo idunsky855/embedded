@@ -1,9 +1,9 @@
 #include <xc.h>
 #include <string.h>
 
-#pragma config JTAGEN = OFF     
-#pragma config FWDTEN = OFF
-#pragma config FNOSC =	FRCPLL
+#pragma config JTAGEN =     OFF     
+#pragma config FWDTEN =     OFF
+#pragma config FNOSC =      FRCPLL
 #pragma config FSOSCEN =	OFF
 #pragma config POSCMOD =	EC
 #pragma config OSCIOFNC =	ON
@@ -12,10 +12,10 @@
 #pragma config FPLLMUL =	MUL_20
 #pragma config FPLLODIV =	DIV_1
 
-#define FIRST_LINE_START 0x80
-#define FIRST_LINE_END 0x8f
-#define SECOND_LINE_START 0xc0
-#define SECOND_LINE_END 0xcf
+#define FIRST_LINE_START    0x80
+#define FIRST_LINE_END      0x8f
+#define SECOND_LINE_START   0xc0
+#define SECOND_LINE_END     0xcf
 
 #define SW0 PORTFbits.RF3
 #define SW1 PORTFbits.RF5
