@@ -29,15 +29,18 @@
 #define ENABLE() {
                     PORTDbits.RD4=1;\
                     PORTDbits.RD4=0;\
-                    busy();}
+                    busy();\
+		}
 
 #define CONTROL() {
                     PORTBbits.RB15=0; /*RS=0*/\
-                    PORTDbits.RD5=0; /*RW=0*/}
+                    PORTDbits.RD5=0; /*RW=0*/\
+		}
                    
 #define DATA() {    
                     PORTBbits.RB15=1; /*RS=1*/ \
-                    PORTDbits.RD5=0; /*RW=0*/}
+                    PORTDbits.RD5=0; /*RW=0*/\
+		}
 
 
 //Switch functions
