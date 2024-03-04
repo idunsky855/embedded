@@ -26,17 +26,21 @@
 #define SW6 PORTBbits.RB10
 #define SW7 PORTBbits.RB9
 
-#define ENABLE() {PORTDbits.RD4=1;\
-                  PORTDbits.RD4=0;\
-                  busy();}
+#define ENABLE() {
+                    PORTDbits.RD4=1;\
+                    PORTDbits.RD4=0;\
+                    busy();}
 
-#define CONTROL() {PORTBbits.RB15=0; /*RS=0*/\
-                  PORTDbits.RD5=0; /*RW=0*/}
+#define CONTROL() {
+                    PORTBbits.RB15=0; /*RS=0*/\
+                    PORTDbits.RD5=0; /*RW=0*/}
                    
-#define DATA() {PORTBbits.RB15=1; /*RS=1*/ \
-                PORTDbits.RD5=0; /*RW=0*/}
+#define DATA() {    
+                    PORTBbits.RB15=1; /*RS=1*/ \
+                    PORTDbits.RD5=0; /*RW=0*/}
 
-//Switches functions
+
+//Switch functions
 void count();
 void shift();
 void fan();
