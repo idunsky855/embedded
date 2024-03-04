@@ -1,30 +1,30 @@
 #include <xc.h>
 #include <string.h>
 
-#pragma config JTAGEN =     OFF     
-#pragma config FWDTEN =     OFF
-#pragma config FNOSC =      FRCPLL
+#pragma config JTAGEN =		OFF     
+#pragma config FWDTEN =     	OFF
+#pragma config FNOSC =      	FRCPLL
 #pragma config FSOSCEN =	OFF
 #pragma config POSCMOD =	EC
 #pragma config OSCIOFNC =	ON
-#pragma config FPBDIV =     DIV_1
+#pragma config FPBDIV =     	DIV_1
 #pragma config FPLLIDIV =	DIV_2
 #pragma config FPLLMUL =	MUL_20
 #pragma config FPLLODIV =	DIV_1
 
-#define FIRST_LINE_START    0x80
-#define FIRST_LINE_END      0x8f
-#define SECOND_LINE_START   0xc0
-#define SECOND_LINE_END     0xcf
+#define FIRST_LINE_START    	0x80
+#define FIRST_LINE_END      	0x8f
+#define SECOND_LINE_START   	0xc0
+#define SECOND_LINE_END     	0xcf
 
-#define SW0 PORTFbits.RF3
-#define SW1 PORTFbits.RF5
-#define SW2 PORTFbits.RF4
-#define SW3 PORTDbits.RD15
-#define SW4 PORTDbits.RD14
-#define SW5 PORTBbits.RB11
-#define SW6 PORTBbits.RB10
-#define SW7 PORTBbits.RB9
+#define SW0 			PORTFbits.RF3
+#define SW1 			PORTFbits.RF5
+#define SW2 			PORTFbits.RF4
+#define SW3 			PORTDbits.RD15
+#define SW4 			PORTDbits.RD14
+#define SW5 			PORTBbits.RB11
+#define SW6 			PORTBbits.RB10
+#define SW7 			PORTBbits.RB9
 
 #define ENABLE() {
                     PORTDbits.RD4=1;\
